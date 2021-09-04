@@ -19,12 +19,12 @@ class Block:
             self.minor_ver = t[2]
             self.section_length = t[3]
             data = f.read(self.block_length-24)
-            o = Options(data[:len(data)-4])
+            self.options = Options(data[:len(data)-4])
             #print(o)
         elif self.block_type == 1: # interface header
             data = f.read(self.block_length-8)
-            options = Options(data[8:len(data)-4])
-            for opt in options.options:
+            self.options = Options(data[8:len(data)-4])
+            for opt in self.options.options:
                 opt:Option
                 if opt.option_type == 9: # timestamp resolution
                     #val  = struct.unpack("bbbb",opt.option_value)[0]
@@ -38,7 +38,7 @@ class Block:
             self.original_packet_length =  unpack("I",f.read(4))[0]
             data = f.read(self.block_length - 28)
             self.packet = Packet(data)
-            o = Options(data[self.captured_packet_length:len(data)-4])
+            self.options = Options(data[self.captured_packet_length:len(data)-4])
         else:
             f.read(self.block_length-8)
 

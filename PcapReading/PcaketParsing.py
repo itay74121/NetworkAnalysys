@@ -17,6 +17,7 @@ class Packet:
             # all is ipv4 even though it doesn't have to be 
             self.length_ip_header = int(data[14]) & 15
             self.protocol = int(data[23])
+            self.ttl = int(data[22])
             start = 14 + self.length_ip_header*4 
             if self.protocol  == 6:#tcp
                 #print("tcp")

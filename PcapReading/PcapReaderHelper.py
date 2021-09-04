@@ -1,6 +1,4 @@
 
-
-
 class SHB:
     def __init__(self,block) -> None:
         self.interfaces = {}
