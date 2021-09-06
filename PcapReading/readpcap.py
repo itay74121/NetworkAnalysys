@@ -1,6 +1,6 @@
 from os import path
-from PcapReaderHelper import IDB,SHB
-from PcapBlock import Block
+from .PcapReaderHelper import IDB,SHB
+from .PcapBlock import Block
 from colorama import Back
 
 

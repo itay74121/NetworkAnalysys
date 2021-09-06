@@ -1,7 +1,7 @@
 from io import TextIOWrapper
 from struct import unpack
-from PcapOptions import Options
-from PcaketParsing import Packet
+from .PcapOptions import Options,Option
+from .PcaketParsing import Packet
 
 
 
