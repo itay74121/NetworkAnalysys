@@ -15,9 +15,7 @@ class PcapReader:
         if not self.isfile:
             print("No such file")
             return
-        
         current_section = 0
-
         with open(self.filename,'rb') as f:
             if not f.readable():
                 return
@@ -32,7 +30,11 @@ class PcapReader:
                     s[s.maxinterfacenum] = IDB(b)
                 elif b.block_type == 6:
                     self.sections[current_section][b.interface_id].packetblocks.append(b)
-                    
+                    interface_block = self.sections[current_section][b.interface_id].block
+                    if interface_block.any:
+                        b.reread_packet(True)
+                    else:
+                        b.reread_packet(False)
                 elif b.block_type == 5:
                     flag = False
 

@@ -64,9 +64,8 @@ class Statistics:
         sizes = []
         total_packets = len(packetblocks)
         for block in packetblocks:
-            if block.packet.type == 8:
-                ttls.append(block.packet.ttl)
-                sizes.append(block.captured_packet_length)
+            ttls.append(block.packet.ttl)
+            sizes.append(block.captured_packet_length)
         total_bytes = sum(sizes)
         avg_size = avg(sizes)
         var_sizes = std(sizes)**2
@@ -79,6 +78,8 @@ class Statistics:
         var_sizes=var_sizes, avg_ttl=avg_ttl,min_ttl=min_ttl,max_ttl=max_ttl,min_size=min_size,max_size=max_size)
 
     def get_statistics(self,packetblocks):
+        if len(packetblocks)  == 0:
+            return {}
         times = self.extract_times(packetblocks)
         return self.get_times_statistics(times) + self.get_packet_statistics(packetblocks)
 

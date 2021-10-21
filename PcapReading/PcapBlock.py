@@ -24,11 +24,14 @@ class Block:
         elif self.block_type == 1: # interface header
             data = f.read(self.block_length-8)
             self.options = Options(data[8:len(data)-4])
-            for opt in self.options.options:
-                opt:Option
-                if opt.option_type == 9: # timestamp resolution
-                    #val  = struct.unpack("bbbb",opt.option_value)[0]
-                    self.timeformat = opt.option_value[0]
+            if self.options.look_for_option(2)[0].any:
+                self.any = True
+            self.time_format = self.options.look_for_option(9)[0].option_value[0]
+            # for opt in self.options.options:
+            #     opt:Option
+            #     if opt.option_type == 9: # timestamp resolution
+            #         #val  = struct.unpack("bbbb",opt.option_value)[0]
+            #         self.timeformat = opt.option_value[0]    
         elif self.block_type == 6: # enhanced packet header
             self.interface_id = unpack("I",f.read(4))[0]
             d = f.read(8)
@@ -36,9 +39,9 @@ class Block:
             self.timestamp = (i1 << 32) | i2
             self.captured_packet_length = unpack("I",f.read(4))[0]
             self.original_packet_length =  unpack("I",f.read(4))[0]
-            data = f.read(self.block_length - 28)
-            self.packet = Packet(data)
-            self.options = Options(data[self.captured_packet_length:len(data)-4])
+            self.data = f.read(self.block_length - 28)
+            #self.packet = Packet(self.data)
+            self.options = Options(self.data[self.captured_packet_length:len(self.data)-4])
         else:
             f.read(self.block_length-8)
 
@@ -52,3 +55,5 @@ class Block:
         # s += f"minor: {self.minor_ver}\n"
         # s += f"section length: {self.section_length}"
         return s
+    def reread_packet(self,flag):
+        self.packet = Packet(self.data,any=flag)
